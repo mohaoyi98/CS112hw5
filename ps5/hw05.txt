@@ -1,0 +1,107 @@
+Problem 1.
+
+1. 
+O(m * n^2 + m^2). In the worst case, all the elements of list1 are same as the last element of list2, and the last element of list2 is unique in list2. Therefore, for every iteration of the outer loop, the inner loop has to keep looping until it gets to the last element of list2. Note that the time efficiency of getItem(i) is O(i), and the time efficiency of addItem(item, i) is also O(i) (in this case, i = inters.length() = the i of the outer loop). Thus, the # of operations of this method would be roughly be sum(0<=i<=m-1)( O(i) + sum(0<=j<=n-1)(O(j)) + O(i) ) 「 sum(0<=i<=m-1)( O(i) + O(n^2)) 「 O(m^2) + m*O(n^2) 「 O(m * n^2 + m^2). Thus, the time efficiency of this method in the worst case would be O(m^2 + n^2 * m).
+
+2. 
+public static LLList intersect(LLList list1, LLList list2) {
+    LLList inters = new LLList();
+    ListIterator iter1 = list1.iterator();
+    Object item1;
+    Object item2;
+
+    while (iter1.hasNext()) {
+        item1 = iter1.next();
+        ListIterator iter2 = list2.iterator();
+
+        while (iter2.hasNext()) {
+            item2 = iter2.next();
+            if (item2.equals(item1)) {
+                inters.addItem(item2, inters.length());
+                break;
+            }
+        }
+    }
+
+    return inters;
+}
+
+3. 
+O(m^2 + mn). The time efficiency of hasNext() and next() are both O(1), and the time efficiency of addItem(item, i) is O(i). And the worst case is, again, that all the elements of list1 are same as the last element of list2, and the last element of list2 is unique in list2. Therefore, the overall running time of the new algorithm would be sum(0<=i<=m-1)(O(1) + sum(0<=j<=n-1)(O(1)) + O(i)) 「 O(m^2 + mn).
+
+
+Problem 2.
+
+1. 
+public static void remAllStack(Stack<Object> stack, Object item) {
+	LLStack<Object> temp = new LLStack();
+		
+	Object top;
+	while (!stack.isEmpty()) {
+		top = stack.pop();
+		if (!top.equals(item)) {
+			temp.push(top);
+		}
+	}
+	
+	Object toAdd;
+	while (!temp.isEmpty()) {
+		toAdd = temp.pop();
+		stack.push(toAdd);
+	}
+}
+
+2. 
+public static void remAllQueue(Queue<Object> queue, Object item) {
+	LLQueue<Object> temp = new LLQueue();
+	
+	Object front;
+	while (!queue.isEmpty()) {
+		front = queue.remove();
+		if (!front.equals(item)) {
+			temp.insert(front);
+		}
+	}
+	
+	Object toAdd;
+	while (!temp.isEmpty()) {
+		toAdd = temp.remove();
+		queue.insert(toAdd);
+	}
+}
+
+
+Problem 3.
+
+1. 
+Array implementation: O(m). Because terms with zero coefficient are not ommited in the array implementation, the length of the array depends on the maximum exponent in the polynomial.
+
+Linked list implementation: O(t). Because terms with zero coefficient are ommited in the linked list implementation, the length of the linked list is proportional to the # of terms.
+
+2. 
+Array implementation:
+Best: O(1), Average: O(1), Worst:O(1).
+This is because array provides random access, thus no matter which term's coefficient we are to change, the time efficiency will always be O(1).
+
+Linked list implementation: 
+Best: O(1), Average: O(t), Worst: O(t).
+Because linked list implementation does not provide random access, to change a coefficient, we have to traverse the list.
+The best case is that we are changing the coefficient of a term whose exponent is less than or equal to the minimum exponent of a term w/ non-zero coefficient. In this case, we are adding a new node to the beginning of the linked list, or simply changing the coeff field of the first node, or deleting the first node (if its coeff is changed to 0). But the time efficiency of these two operations are both O(1), since we do not need to traverse the list.
+For the average or the worst case, we are changing the coefficient of a term in the middle or at the end of the linked list, and thus we have to traverse half of the list or the whole list, respectively. Therefore, the running time of these cases are both proportional to the length of the linked list. Since the length of the linked list is t, the time efficiency will be O(t).
+
+3.
+Array implementation: (Note that the answer applies to the algorithm that tests whether the coefficient of a term is zero before computing the power.)
+Best: O(1), Average: O(tm), Worst: O(m^2).
+The best case is that the polynomial is a constant, in which the # of steps that the algorithm takes is O(1).
+The average case is that the maximum exponent is m > 0, but the # of terms with non-zero coefficient, t, is less than m+1. Therefore, we have to traverse the array, compute the value of each term with non-zero coefficients, and add them up, which takes roughly O(tm) steps. 
+In the worst case, the # of terms with non-zero coefficients is equal to m+1. Therefore, the # of steps it takes is roughly sum(0<=i<=m)(O(i)) 「 O(m^2), where O(i) comes from the time efficiency of the helper method that computes x^i.
+
+Linked list implementation:
+Best: O(1), Average: O(tm), Worst: O(m^2).
+The best case is that the polymial is a constant, in which the # of steps that the algorithm takes is O(1).
+The average case is that the maximum exponent is m > 0, but the # of terms with non-zero coefficient, t, is less than m+1. Therefore, we have to traverse the linked list, compute the value of each term with non-zero coefficients, and add them up, which takes roughly O(tm) steps.
+In the worst case, the # of terms with non-zero coefficients is equal to m+1. Therefore, the # of steps it takes is roughly sum(0<=i<=m)(O(i)) 「 O(m^2), where O(i) comes from the time efficiency of the helper method that computes x^i.
+
+
+4. 
+Suppose we want to know the the maximum exponent of an unknown polynomial. The performance of array would be better than the performance of linked list in general. This is because for array, we can simply compute (length - 1), and the time efficiency would be O(1); but for the linked list, we have to traverse the whole list, whose time efficiency would be O(t).
